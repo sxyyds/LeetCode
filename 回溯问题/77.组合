@@ -1,0 +1,59 @@
+/
+*dfs给当前的数个数组，并在保存后确定个值返回一个二维返回路径
+@int ** 保存路径的二维指针com
+@int * lujing：保存路径值是否被遍历的指针
+@int * red:保存路径值的指针
+@int n:整数n
+@int k:需要遍历多少个值
+@int red_i:路径值数组下标
+@int j:开始遍历的起点
+@returnsize:返回整数数组的个数
+@返回值：无返回值，地址操作
+*/
+void dfs(int ** com, int * lujing , int * red , int n , int k, int red_i,int j,int * returnSize)
+{
+    if(red_i == k)
+    {
+        com[(*returnSize)] = (int *) malloc(sizeof(int )*k);
+        memcpy(com[(*returnSize)++],red,sizeof(int )*k);
+        return ; 
+    }
+    int i;
+    for(i=j;i<=n;i++)
+    {
+        if(lujing[i] == 1)
+        {
+            continue;
+        }
+        red[red_i] = i;
+        lujing[i] = 1;
+        dfs(com,lujing,red,n,k,red_i+1,i+1,returnSize);  
+        lujing[i] = 0;  
+    }
+}
+/*
+*combine:给定两个整数 n 和 k，返回范围 [1, n] 中所有可能的 k 个数的组合
+@n:整数的最大值
+@k:返回整数数组的单个长度
+@returnsize:返回整数数组的个数
+@returncolumnsizes:返回整数数组单个长度
+@返回值:二维数组
+*/
+int** combine(int n, int k, int* returnSize, int** returnColumnSizes){
+    int ** com = (int **)malloc(sizeof(int *) * 10000);
+    *returnSize = 0;
+    int i;
+    int * lujing = (int *)malloc(sizeof(int)*(n+1));
+    for(i=0;i<n+1;i++)
+    {
+        lujing[i] = 0;
+    }
+    int * red = (int *)malloc(sizeof(int)*k);
+    dfs(com,lujing,red,n,k,0,1,returnSize);
+    *returnColumnSizes = (int *)malloc(sizeof(int) * (*returnSize));
+    for(i= 0;i<(*returnSize);i++)
+    {
+        (*returnColumnSizes)[i] = k;    
+    }
+    return com;
+}
